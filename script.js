@@ -15,3 +15,6 @@ async function fetchQuote() {
     console.error(error);
   }
 }
+
+// Load a quote when the page loads
+window.addEventListener('load', fetchQuote);
