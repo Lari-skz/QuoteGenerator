@@ -1,27 +1,22 @@
 const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
-const newQuoteBtn = document.getElementById('new-quote');
+const btn = document.getElementById('new-quote');
 
 async function fetchQuote() {
   try {
-    const response = await fetch('https://quotes.rest/qod?category=inspire');
+    const response = await fetch('https://api.quotable.io/random');
+    if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
-
-    if (data && data.contents && data.contents.quotes && data.contents.quotes.length > 0) {
-      const quote = data.contents.quotes[0];
-      quoteText.textContent = `"${quote.quote}"`;
-      authorText.textContent = `— ${quote.author}`;
-    } else {
-      quoteText.textContent = "No quote found.";
-      authorText.textContent = "";
-    }
+    quoteText.textContent = `"${data.content}"`;
+    authorText.textContent = `— ${data.author}`;
   } catch (error) {
-    quoteText.textContent = "Oops! Could not fetch a quote.";
-    authorText.textContent = "";
-    console.error(error);
+    quoteText.textContent = "Oops, couldn't fetch a quote right now.";
+    authorText.textContent = '';
+    console.error('Error fetching quote:', error);
   }
 }
 
-newQuoteBtn.addEventListener('click', fetchQuote);
+btn.addEventListener('click', fetchQuote);
 
+// Fetch a quote on initial load
 fetchQuote();
