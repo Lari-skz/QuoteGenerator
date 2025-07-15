@@ -1,4 +1,3 @@
-
 async function fetchQuote() {
   const quoteElement = document.getElementById('quote');
   const authorElement = document.getElementById('author');
@@ -50,4 +49,4 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.transform = 'scale(1)';
     });
   }
-}););
+});
