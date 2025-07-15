@@ -1,3 +1,4 @@
+
 async function fetchQuote() {
   try {
     const response = await fetch('/quote');
