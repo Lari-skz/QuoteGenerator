@@ -4,27 +4,28 @@ const newQuoteBtn = document.getElementById('new-quote');
 
 async function fetchQuote() {
   try {
-    // Fetch a random quote from the quotable API
-    const response = await fetch('https://api.quotable.io/random');
-    if (!response.ok) throw new Error('Network response was not ok');
+    const response = await fetch('https://quotes.rest/qod?category=inspire');
     const data = await response.json();
 
-    // Add a simple fade-out/fade-in animation
-    quoteText.style.opacity = 0;
-    authorText.style.opacity = 0;
-
-    setTimeout(() => {
-      quoteText.textContent = `"${data.content}"`;
-      authorText.textContent = `— ${data.author}`;
-      quoteText.style.opacity = 1;
-      authorText.style.opacity = 1;
-    }, 300);
+    if (data && data.contents && data.contents.quotes && data.contents.quotes.length > 0) {
+      const quote = data.contents.quotes[0];
+      quoteText.textContent = `"${quote.quote}"`;
+      authorText.textContent = `— ${quote.author}`;
+    } else {
+      quoteText.textContent = "No quote found.";
+      authorText.textContent = "";
+    }
   } catch (error) {
-    quoteText.textContent = 'Oops! Could not fetch a quote.';
-    authorText.textContent = '';
+    quoteText.textContent = "Oops! Could not fetch a quote.";
+    authorText.textContent = "";
     console.error(error);
   }
 }
+
+newQuoteBtn.addEventListener('click', fetchQuote);
+
+fetchQuote();
+
 
 newQuoteBtn.addEventListener('click', fetchQuote);
 
