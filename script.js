@@ -1,22 +1,16 @@
-const quoteText = document.getElementById('quote');
-const authorText = document.getElementById('author');
-const btn = document.getElementById('new-quote');
-
 async function fetchQuote() {
   try {
     const response = await fetch('https://api.quotable.io/random');
-    if (!response.ok) throw new Error('Network response was not ok');
+    if (!response.ok) throw new Error('Network error');
     const data = await response.json();
-    quoteText.textContent = `"${data.content}"`;
-    authorText.textContent = `— ${data.author}`;
-  } catch (error) {
-    quoteText.textContent = "Oops, couldn't fetch a quote right now.";
-    authorText.textContent = '';
-    console.error('Error fetching quote:', error);
+    document.getElementById('quote').textContent = `"${data.content}"`;
+    document.getElementById('author').textContent = `— ${data.author}`;
+  } catch {
+    document.getElementById('quote').textContent = "Oops, can't fetch quote now.";
+    document.getElementById('author').textContent = '';
   }
 }
 
-btn.addEventListener('click', fetchQuote);
+document.getElementById('new-quote').addEventListener('click', fetchQuote);
 
-// Fetch a quote on initial load
 fetchQuote();
