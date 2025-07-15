@@ -25,9 +25,3 @@ async function fetchQuote() {
 newQuoteBtn.addEventListener('click', fetchQuote);
 
 fetchQuote();
-
-
-newQuoteBtn.addEventListener('click', fetchQuote);
-
-// Fetch a quote on page load
-fetchQuote();
