@@ -1,12 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 
-// Fix: use node-fetch in CommonJS
+// Use dynamic import for node-fetch in CommonJS
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const app = express();
-app.use(cors()); // allow all origins
-app.use(express.static('.')); // serve static files from current directory
+
+// ✅ Allow only your GitHub Pages site
+app.use(cors({
+  origin: 'https://lari-skz.github.io'
+}));
+
+// Serve static files (optional if you're hosting frontend elsewhere)
+app.use(express.static('.'));
 
 app.get('/quote', async (req, res) => {
   try {
@@ -16,12 +22,11 @@ app.get('/quote', async (req, res) => {
     if (!response.ok) {
       console.log(`API Error: ${response.status} - ${response.statusText}`);
 
-      // Fallback to a working API
+      // Fallback to quotable.io
       try {
         const fallbackResponse = await fetch('https://api.quotable.io/random?tags=inspirational');
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();
-          // Convert to the expected format
           const convertedData = {
             contents: {
               quotes: [{
@@ -36,7 +41,7 @@ app.get('/quote', async (req, res) => {
         console.log('Fallback API also failed:', fallbackError);
       }
 
-      // Last resort: return a random static inspiring quote
+      // Final fallback: random hardcoded quote
       const fallbackQuotes = [
         { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
         { quote: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
