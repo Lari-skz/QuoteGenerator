@@ -1,11 +1,12 @@
 async function fetchQuote() {
   try {
-       const response = await fetch('https://2082666d-df63-4fa3-b646-003f7a56e192-00-1y05tghu0sb3b.riker.replit.dev/quote');
+    const response = await fetch('https://dummyjson.com/quotes/random');
     if (!response.ok) throw new Error('Network error');
     const data = await response.json();
 
-    const quote = data.contents.quotes[0].quote;
-    const author = data.contents.quotes[0].author;
+    // The API returns { quote: '...', author: '...' }
+    const quote = data.quote;
+    const author = data.author;
 
     document.getElementById('quote').textContent = `"${quote}"`;
     document.getElementById('author').textContent = `— ${author}`;
