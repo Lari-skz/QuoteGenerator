@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 
+// Fix: use node-fetch in CommonJS
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 const app = express();
 app.use(cors()); // allow all origins
 app.use(express.static('.')); // serve static files from current directory
@@ -9,10 +12,10 @@ app.get('/quote', async (req, res) => {
   try {
     // Try the original API first
     const response = await fetch('https://quotes.rest/qod?category=inspire');
-    
+
     if (!response.ok) {
       console.log(`API Error: ${response.status} - ${response.statusText}`);
-      
+
       // Fallback to a working API
       try {
         const fallbackResponse = await fetch('https://api.quotable.io/random?tags=inspirational');
@@ -32,7 +35,7 @@ app.get('/quote', async (req, res) => {
       } catch (fallbackError) {
         console.log('Fallback API also failed:', fallbackError);
       }
-      
+
       // Last resort: return a random static inspiring quote
       const fallbackQuotes = [
         { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
@@ -46,16 +49,16 @@ app.get('/quote', async (req, res) => {
         { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
         { quote: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" }
       ];
-      
+
       const randomQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
-      
+
       return res.json({
         contents: {
           quotes: [randomQuote]
         }
       });
     }
-    
+
     const data = await response.json();
     res.json(data);
   } catch (error) {
@@ -66,4 +69,3 @@ app.get('/quote', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
-
